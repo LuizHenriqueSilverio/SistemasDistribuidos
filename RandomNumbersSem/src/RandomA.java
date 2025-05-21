@@ -1,0 +1,29 @@
+import java.util.Random;
+
+public class RandomA extends Thread{
+	
+	public String id;
+	
+	public RandomA(int id) {
+		this.id = "A-".concat(String.valueOf(id));
+	}
+	
+	@Override
+	public void run() {
+		while(true) {
+			// Operação P(s) - decremento
+			try {
+				Lock.lock.acquire();
+				
+				int number = new Random().nextInt(1000);
+				System.out.printf("RANDOM-%s\n", id);
+				System.out.printf("%s-> %d\n", id, number);
+				
+				Thread.sleep(number);
+			} catch (InterruptedException e) {}
+			finally {
+				Lock.lock.release();
+			}
+		}
+	}
+}
