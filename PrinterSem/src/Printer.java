@@ -1,6 +1,7 @@
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -26,11 +27,29 @@ public class Printer {
 				freeStream = System.out;
 			}
 			
+			thread.getStream().printf("Dentro: %s\n", threadIn);
+			
+			// Fim seção crítica mutex das 2 threads
+			lockPrints.unlock();
+			
+			// Impressão dos dados
+			for (String number : numbers) {
+				thread.getStream().print(number);
+			}
+			
+			lockPrints.lock();
+			threadIn.remove(thread.getName());
 			lockPrints.unlock();
 			
 		} catch (InterruptedException e) {} 
 		finally {
+			// Fim seção crítica 2 threads
 			streamSemaphore.release();
+			
+			try {
+				thread.sleep(new Random().nextInt(500));
+			} catch (InterruptedException e) {}
+			
 		}
 	}
 

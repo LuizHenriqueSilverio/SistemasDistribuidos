@@ -16,16 +16,20 @@ public class PrinterThread extends Thread{
 		this.stream = freeStream;
 	}
 	
+	public PrintStream getStream() {
+		return stream;
+	}
+	
 	@Override
 	public void run() {
 		while(true) {
 			int amount = new Random().nextInt(MAX_MESSAGE);
 			
 			String[] numbers = new String[amount + 1];
-			numbers[0] = String.format("%s -> Total: %d", Thread.currentThread().getName(), amount);
+			numbers[0] = String.format("%s -> Total: %d\n", Thread.currentThread().getName(), amount);
 			
 			for (int i = 1; i < numbers.length; i++) {
-				numbers[i] = String.format("%s: %d", Thread.currentThread().getName(), i);
+				numbers[i] = String.format("%s: %d\n", Thread.currentThread().getName(), i);
 			}
 			
 			printer.printMessages(numbers, this);
