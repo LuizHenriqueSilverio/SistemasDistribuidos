@@ -17,7 +17,14 @@ public class Printer {
 			streamSemaphore.acquire();
 			
 			lockPrints.lock();
-			threadIn.add(Thread.currentThread().getName());
+			
+			String console = freeStream == System.out ? "-out" :  "-err";
+			
+			String threadName = Thread.currentThread().getName() + console; 
+			
+			threadIn.add(threadName);
+			
+			
 			
 			thread.setStream(freeStream);
 			
@@ -27,7 +34,8 @@ public class Printer {
 				freeStream = System.out;
 			}
 			
-			thread.getStream().printf("Dentro: %s\n", threadIn);
+			thread.getStream().printf("Dentro[%s]: %s\n", threadName, threadIn);
+			thread.getStream().flush();
 			
 			// Fim seção crítica mutex das 2 threads
 			lockPrints.unlock();
@@ -35,12 +43,16 @@ public class Printer {
 			// Impressão dos dados
 			for (String number : numbers) {
 				thread.getStream().print(number);
+				thread.getStream().flush();
+				
 			}
 			
 			lockPrints.lock();
-			threadIn.remove(thread.getName());
+			threadIn.remove(threadName);
 			lockPrints.unlock();
 			
+			freeStream = thread.getStream();
+			thread.getStream().flush();
 		} catch (InterruptedException e) {} 
 		finally {
 			// Fim seção crítica 2 threads

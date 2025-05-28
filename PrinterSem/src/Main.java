@@ -9,12 +9,18 @@ public class Main {
 		PrinterThread job3 = new PrinterThread(printer);
 		PrinterThread job4 = new PrinterThread(printer);
 		PrinterThread job5 = new PrinterThread(printer);
+		PrinterThread job6 = new PrinterThread(printer);
+		PrinterThread job7 = new PrinterThread(printer);
+		PrinterThread job8 = new PrinterThread(printer);
 		
 		job1.start();
 		job2.start();
 		job3.start();
 		job4.start();
 		job5.start();
+		job6.start();
+		job7.start();
+		job8.start();
 	}
 
 }
