@@ -1,8 +1,8 @@
 package udp.chat.client;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import javax.swing.*;
 
 import udp.chat.ChatException;
@@ -20,36 +20,48 @@ public class ChatWindow extends JFrame implements MessageContainer {
     private String userName;
 
     public ChatWindow() {
-        setTitle("SD Chat");
-        setSize(640, 480);
+        setTitle("UDP Chat");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
         
-        JPanel connectionPanel = new JPanel(new java.awt.GridLayout(2, 4, 5, 5));
-        connectionPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        JPanel connectionPanel = new JPanel(new GridLayout(0, 2, 5, 5));
+        connectionPanel.setBorder(BorderFactory.createTitledBorder("Configuração"));
+        
+    	nameField = new JTextField();
+    	localPortField = new JTextField();
+    	remotePortField = new JTextField();
+    	messageField = new JTextField();
+    	chatArea = new JTextArea();
+    	connectButton = new JButton("Conectar");
+    	sendButton = new JButton("Enviar");
 
         connectionPanel.add(new JLabel("Nome:"));
-        nameField = new JTextField();
         connectionPanel.add(nameField);
+        nameField.setToolTipText("Seu nome será exibido nas mensagens");
 
         connectionPanel.add(new JLabel("Porta Local:"));
-        localPortField = new JTextField();
         connectionPanel.add(localPortField);
+        localPortField.setToolTipText("Porta UDP para ouvir mensagens");
 
         connectionPanel.add(new JLabel("Porta Remota:"));
-        remotePortField = new JTextField();
         connectionPanel.add(remotePortField);
-
-        connectionPanel.add(new JPanel());
+        remotePortField.setToolTipText("Porta UDP do destinatário");
+        remotePortField.addActionListener(e -> connect());
 
         connectButton = new JButton("Conectar");
-        connectionPanel.add(connectButton);
+        JPanel btnWrapper = new JPanel(new BorderLayout());
+        btnWrapper.add(connectButton, BorderLayout.CENTER);
+        connectionPanel.add(new JLabel());
+        connectionPanel.add(btnWrapper);
 
         add(connectionPanel, BorderLayout.NORTH);
 
         chatArea = new JTextArea();
         chatArea.setEditable(false);
+        chatArea.setLineWrap(true);
+        chatArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(chatArea);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Conversa"));
         add(scrollPane, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new BorderLayout(10, 0));
@@ -63,6 +75,8 @@ public class ChatWindow extends JFrame implements MessageContainer {
         sendButton.setEnabled(false);
         setupActionListeners();
 
+        getContentPane().setPreferredSize(new Dimension(640, 480));
+        pack();
         setLocationRelativeTo(null);
         setVisible(true);
     }
