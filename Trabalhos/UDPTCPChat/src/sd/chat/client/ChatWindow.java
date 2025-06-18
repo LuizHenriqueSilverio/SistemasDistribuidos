@@ -137,7 +137,7 @@ public class ChatWindow extends JFrame implements MessageContainer {
 				protected void done() {
 					try {
 						sender = get();
-						receiver = ChatFactory.getLastReceiver(); // Pega o receiver criado
+						receiver = ChatFactory.getLastReceiver();
 
 						messageField.setEnabled(true);
 						sendButton.setEnabled(true);
